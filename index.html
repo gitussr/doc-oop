@@ -1,0 +1,2243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080c14">
+<meta name="description" content="Learn OOP in PHP - From Beginner to Advanced">
+<link rel="manifest" href="manifest.json">
+<title>PHP::OOP — Master Object Oriented Programming</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c14;
+    --bg2: #0d1220;
+    --bg3: #111827;
+    --surface: #141c2e;
+    --surface2: #1a2540;
+    --border: #1e2d4a;
+    --border2: #243354;
+    --accent: #00d4ff;
+    --accent2: #0099cc;
+    --accent3: #00ff88;
+    --accent4: #ff6b35;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --text3: #64748b;
+    --glow: 0 0 20px rgba(0,212,255,0.3);
+    --glow2: 0 0 40px rgba(0,212,255,0.15);
+    --radius: 8px;
+    --font-display: 'Orbitron', monospace;
+    --font-mono: 'Space Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* GRID BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ─── LAYOUT ─── */
+  #app { position: relative; z-index: 1; display: flex; min-height: 100vh; }
+
+  /* ─── SIDEBAR ─── */
+  #sidebar {
+    width: 280px;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    overflow-y: auto;
+  }
+
+  #sidebar::-webkit-scrollbar { width: 4px; }
+  #sidebar::-webkit-scrollbar-track { background: transparent; }
+  #sidebar::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  .sidebar-header {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0;
+    background: var(--bg2);
+    z-index: 2;
+  }
+
+  .logo {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 900;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 900;
+    color: var(--bg);
+    flex-shrink: 0;
+  }
+
+  .logo-sub {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 1px;
+    margin-top: 3px;
+    font-weight: 400;
+  }
+
+  .progress-bar-wrap {
+    margin-top: 14px;
+    background: var(--border);
+    border-radius: 2px;
+    height: 3px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    border-radius: 2px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  .progress-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 1px;
+    margin-top: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .nav-section { padding: 10px 0; }
+
+  .nav-section-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text3);
+    padding: 10px 20px 6px;
+    text-transform: uppercase;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+    position: relative;
+  }
+
+  .nav-item:hover { background: rgba(0,212,255,0.05); }
+
+  .nav-item.active {
+    background: rgba(0,212,255,0.08);
+    border-left-color: var(--accent);
+  }
+
+  .nav-item.active .nav-title { color: var(--accent); }
+
+  .nav-num {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text3);
+    width: 18px;
+    flex-shrink: 0;
+  }
+
+  .nav-info { flex: 1; min-width: 0; }
+
+  .nav-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .nav-badge {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .badge-beginner { background: rgba(0,255,136,0.15); color: var(--accent3); }
+  .badge-intermediate { background: rgba(0,212,255,0.15); color: var(--accent); }
+  .badge-advanced { background: rgba(255,107,53,0.15); color: var(--accent4); }
+
+  .nav-check {
+    width: 14px; height: 14px;
+    border: 1px solid var(--border2);
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8px;
+    transition: all 0.2s;
+  }
+
+  .nav-check.done {
+    background: var(--accent3);
+    border-color: var(--accent3);
+    color: var(--bg);
+    box-shadow: 0 0 8px rgba(0,255,136,0.4);
+  }
+
+  /* ─── MAIN ─── */
+  #main {
+    margin-left: 280px;
+    flex: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ─── TOPBAR ─── */
+  #topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(8,12,20,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  #menu-btn {
+    display: none;
+    background: none;
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    border-radius: var(--radius);
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .chapter-crumb {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 1px;
+  }
+
+  .chapter-crumb span { color: var(--accent); }
+
+  .topbar-actions { margin-left: auto; display: flex; gap: 8px; }
+
+  .btn {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 7px 16px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 1px;
+    border: none;
+    outline: none;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text2);
+    border: 1px solid var(--border2);
+  }
+
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    font-weight: 700;
+  }
+
+  .btn-primary:hover {
+    background: #00eeff;
+    box-shadow: var(--glow);
+    transform: translateY(-1px);
+  }
+
+  .btn-success {
+    background: var(--accent3);
+    color: var(--bg);
+    font-weight: 700;
+  }
+
+  .btn-success:hover { box-shadow: 0 0 16px rgba(0,255,136,0.4); }
+
+  /* ─── CONTENT ─── */
+  #content {
+    flex: 1;
+    padding: 40px 32px;
+    max-width: 860px;
+    width: 100%;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    padding: 60px 0 40px;
+    position: relative;
+  }
+
+  .hero-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 24px; height: 1px;
+    background: var(--accent);
+  }
+
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  .hero h1 .highlight {
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    font-size: 15px;
+    color: var(--text2);
+    line-height: 1.7;
+    max-width: 600px;
+    margin-bottom: 32px;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    font-family: var(--font-mono);
+  }
+
+  .stat-num {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+
+  /* ─── CHAPTER CARDS ─── */
+  .chapters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  .chapter-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chapter-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+
+  .chapter-card:hover { border-color: var(--border2); transform: translateY(-2px); box-shadow: var(--glow2); }
+  .chapter-card:hover::before { transform: scaleX(1); }
+  .chapter-card.completed { border-color: rgba(0,255,136,0.2); }
+  .chapter-card.completed::before { transform: scaleX(1); background: var(--accent3); }
+
+  .card-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .card-title {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .card-desc {
+    font-size: 12px;
+    color: var(--text3);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* ─── CHAPTER VIEW ─── */
+  .chapter-view { animation: fadeUp 0.4s ease; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .chapter-header {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .chapter-header h2 {
+    font-family: var(--font-display);
+    font-size: clamp(20px, 3vw, 32px);
+    font-weight: 900;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+
+  .chapter-meta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 12px;
+  }
+
+  .meta-pill {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+  }
+
+  /* ─── CONTENT BLOCKS ─── */
+  .content-section {
+    margin-bottom: 32px;
+  }
+
+  .content-section h3 {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .content-section h3::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .content-section p {
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.8;
+    margin-bottom: 12px;
+  }
+
+  .content-section ul {
+    list-style: none;
+    margin-bottom: 12px;
+  }
+
+  .content-section ul li {
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.7;
+    padding: 4px 0;
+    padding-left: 20px;
+    position: relative;
+  }
+
+  .content-section ul li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 10px;
+    top: 7px;
+  }
+
+  /* ─── CODE BLOCK ─── */
+  .code-wrap {
+    background: #060a11;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 16px 0;
+    position: relative;
+  }
+
+  .code-header {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .code-lang {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 1px;
+  }
+
+  .code-copy {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text3);
+    background: none;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: color 0.15s;
+  }
+
+  .code-copy:hover { color: var(--accent); }
+
+  .code-body {
+    padding: 20px;
+    overflow-x: auto;
+  }
+
+  .code-body pre {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.8;
+    color: #cdd6f4;
+    white-space: pre;
+  }
+
+  /* Syntax */
+  .kw { color: #cba6f7; }
+  .fn { color: #89b4fa; }
+  .str { color: #a6e3a1; }
+  .cm { color: var(--text3); font-style: italic; }
+  .num { color: #fab387; }
+  .cls { color: #f9e2af; }
+  .var { color: #cdd6f4; }
+  .op { color: #94e2d5; }
+  .punc { color: #7f849c; }
+
+  /* ─── CALLOUT ─── */
+  .callout {
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin: 16px 0;
+    border-left: 3px solid;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .callout-info {
+    background: rgba(0,212,255,0.08);
+    border-color: var(--accent);
+    color: var(--text2);
+  }
+
+  .callout-tip {
+    background: rgba(0,255,136,0.08);
+    border-color: var(--accent3);
+    color: var(--text2);
+  }
+
+  .callout-warn {
+    background: rgba(255,107,53,0.08);
+    border-color: var(--accent4);
+    color: var(--text2);
+  }
+
+  .callout strong {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+
+  .callout-info strong { color: var(--accent); }
+  .callout-tip strong { color: var(--accent3); }
+  .callout-warn strong { color: var(--accent4); }
+
+  /* ─── QUIZ ─── */
+  .quiz-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-top: 32px;
+  }
+
+  .quiz-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .quiz-title {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 1px;
+  }
+
+  .quiz-progress-text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 1px;
+  }
+
+  .question-block { animation: fadeUp 0.3s ease; }
+
+  .question-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .question-text {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--bg3);
+  }
+
+  .option:hover:not(.locked) { border-color: var(--accent); background: rgba(0,212,255,0.05); }
+
+  .option.selected { border-color: var(--accent); background: rgba(0,212,255,0.08); }
+  .option.correct { border-color: var(--accent3); background: rgba(0,255,136,0.08); }
+  .option.wrong { border-color: var(--accent4); background: rgba(255,107,53,0.08); }
+
+  .option-letter {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text3);
+    width: 20px;
+    flex-shrink: 0;
+    padding-top: 1px;
+    font-weight: 700;
+  }
+
+  .option.selected .option-letter { color: var(--accent); }
+  .option.correct .option-letter { color: var(--accent3); }
+  .option.wrong .option-letter { color: var(--accent4); }
+
+  .option-text { font-size: 13px; color: var(--text2); line-height: 1.5; }
+
+  .feedback {
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  .feedback.show { display: block; animation: fadeUp 0.25s ease; }
+  .feedback.correct-fb { background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.2); color: var(--accent3); }
+  .feedback.wrong-fb { background: rgba(255,107,53,0.1); border: 1px solid rgba(255,107,53,0.2); color: var(--accent4); }
+
+  .quiz-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* ─── QUIZ RESULT ─── */
+  .quiz-result {
+    text-align: center;
+    padding: 20px 0;
+    animation: fadeUp 0.4s ease;
+  }
+
+  .result-score {
+    font-family: var(--font-display);
+    font-size: 64px;
+    font-weight: 900;
+    line-height: 1;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+
+  .result-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .result-message {
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.6;
+    margin-bottom: 24px;
+    max-width: 400px;
+    margin-inline: auto;
+  }
+
+  /* ─── NAV BUTTONS ─── */
+  .nav-btns {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ─── MOBILE ─── */
+  #overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 90;
+  }
+
+  @media (max-width: 768px) {
+    #sidebar {
+      transform: translateX(-100%);
+    }
+
+    #sidebar.open {
+      transform: translateX(0);
+    }
+
+    #main { margin-left: 0; }
+
+    #menu-btn { display: block; }
+
+    #content { padding: 24px 16px; }
+
+    #topbar { padding: 12px 16px; }
+
+    #overlay.show { display: block; }
+
+    .hero { padding: 32px 0 24px; }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  /* Section divider */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    margin: 32px 0;
+    opacity: 0.3;
+  }
+
+  .tag-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 16px 0;
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 3px 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    color: var(--text2);
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- SIDEBAR -->
+  <nav id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">OOP</div>
+        <div>
+          <div>PHP::CLASS</div>
+          <div class="logo-sub">OBJECT ORIENTED MASTERY</div>
+        </div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <div class="progress-label">
+        <span>PROGRESS</span>
+        <span id="progressText">0 / 0</span>
+      </div>
+    </div>
+
+    <div id="navList"></div>
+  </nav>
+
+  <!-- OVERLAY -->
+  <div id="overlay"></div>
+
+  <!-- MAIN -->
+  <main id="main">
+    <div id="topbar">
+      <button id="menu-btn" onclick="toggleSidebar()">☰</button>
+      <div class="chapter-crumb" id="crumb">
+        PHP::OOP &nbsp;/&nbsp; <span>Home</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost" id="prevBtn" onclick="navigate(-1)" style="display:none">← PREV</button>
+        <button class="btn btn-primary" id="nextBtn" onclick="navigate(1)" style="display:none">NEXT →</button>
+      </div>
+    </div>
+
+    <div id="content"></div>
+  </main>
+</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────
+const chapters = [
+  {
+    id: 0,
+    title: "Introduction to OOP",
+    level: "beginner",
+    desc: "What is OOP and why it matters",
+    icon: "◈",
+    content: {
+      intro: `Object-Oriented Programming (OOP) is a programming paradigm that organizes code around <strong>objects</strong> — real-world entities that bundle data and behavior together. PHP fully supports OOP, making your code modular, reusable, and maintainable.`,
+      sections: [
+        {
+          heading: "What is OOP?",
+          body: `OOP is a way of structuring programs so that properties and behaviors are bundled into individual <em>objects</em>. Instead of writing a list of instructions, you create objects that interact with each other.`,
+          bullets: [
+            "Objects represent real-world entities",
+            "Code is organized into reusable classes",
+            "Data and behavior are encapsulated together",
+            "OOP makes large codebases manageable"
+          ]
+        },
+        {
+          heading: "OOP vs Procedural",
+          body: `Procedural PHP runs top-to-bottom with functions. OOP organizes logic into self-contained objects. Both have use cases, but OOP shines in large applications, frameworks like Laravel, and team environments.`,
+          code: `<span class="cm">// Procedural approach</span>
+<span class="kw">function</span> <span class="fn">getFullName</span>(<span class="var">$first</span>, <span class="var">$last</span>) {
+    <span class="kw">return</span> <span class="var">$first</span> <span class="op">.</span> <span class="str">' '</span> <span class="op">.</span> <span class="var">$last</span>;
+}
+<span class="fn">echo</span> <span class="fn">getFullName</span>(<span class="str">'John'</span>, <span class="str">'Doe'</span>);
+
+<span class="cm">// OOP approach</span>
+<span class="kw">class</span> <span class="cls">Person</span> {
+    <span class="kw">public</span> <span class="var">$firstName</span>;
+    <span class="kw">public</span> <span class="var">$lastName</span>;
+
+    <span class="kw">public function</span> <span class="fn">getFullName</span>() {
+        <span class="kw">return</span> <span class="var">$this</span><span class="op">-></span><span class="var">firstName</span> <span class="op">.</span> <span class="str">' '</span> <span class="op">.</span> <span class="var">$this</span><span class="op">-></span><span class="var">lastName</span>;
+    }
+}
+
+<span class="var">$person</span> <span class="op">=</span> <span class="kw">new</span> <span class="cls">Person</span>();
+<span class="var">$person</span><span class="op">-></span><span class="var">firstName</span> <span class="op">=</span> <span class="str">'John'</span>;
+<span class="var">$person</span><span class="op">-></span><span class="var">lastName</span> <span class="op">=</span> <span class="str">'Doe'</span>;
+<span class="fn">echo</span> <span class="var">$person</span><span class="op">-></span><span class="fn">getFullName</span>(); <span class="cm">// John Doe</span>`
+        }
+      ],
+      pillars: [
+        { name: "Encapsulation", desc: "Bundle data + behavior, hide internals", color: "accent" },
+        { name: "Inheritance", desc: "Child classes inherit parent features", color: "accent3" },
+        { name: "Polymorphism", desc: "Same interface, different implementations", color: "accent4" },
+        { name: "Abstraction", desc: "Hide complexity, expose only essentials", color: "accent" }
+      ],
+      callout: { type: "info", title: "WHY LEARN OOP?", text: "Every major PHP framework — Laravel, Symfony, Yii — is built on OOP principles. Mastering OOP is essential for professional PHP development." }
+    },
+    quiz: [
+      {
+        q: "What does OOP stand for?",
+        opts: ["Object-Oriented Programming", "Operational Output Processing", "Object-Output Protocol", "Oriented Object Processing"],
+        correct: 0,
+        explain: "OOP stands for Object-Oriented Programming — a paradigm that organizes code around objects."
+      },
+      {
+        q: "Which of the following is NOT one of the four pillars of OOP?",
+        opts: ["Encapsulation", "Inheritance", "Compilation", "Polymorphism"],
+        correct: 2,
+        explain: "Compilation is not an OOP pillar. The four pillars are Encapsulation, Inheritance, Polymorphism, and Abstraction."
+      },
+      {
+        q: "In OOP, what is an object?",
+        opts: ["A function that returns data", "An instance of a class", "A type of variable", "A loop structure"],
+        correct: 1,
+        explain: "An object is an instance of a class — a concrete entity created from the class blueprint."
+      }
+    ]
+  },
+  {
+    id: 1,
+    title: "Classes & Objects",
+    level: "beginner",
+    desc: "Creating blueprints and instances",
+    icon: "⬡",
+    content: {
+      intro: `A <strong>class</strong> is a blueprint or template. An <strong>object</strong> is a specific instance created from that blueprint. Think of a class as a cookie cutter and objects as the cookies.`,
+      sections: [
+        {
+          heading: "Defining a Class",
+          body: `Classes are defined with the <code>class</code> keyword. They contain properties (variables) and methods (functions).`,
+          code: `<span class="kw">class</span> <span class="cls">Car</span> {
+    <span class="cm">// Properties (attributes)</span>
+    <span class="kw">public</span> <span class="var">$brand</span>  <span class="op">=</span> <span class="str">''</span>;
+    <span class="kw">public</span> <span class="var">$model</span>  <span class="op">=</span> <span class="str">''</span>;
+    <span class="kw">public</span> <span class="var">$speed</span>  <span class="op">=</span> <span class="num">0</span>;
+
+    <span class="cm">// Methods (behaviors)</span>
+    <span class="kw">public function</span> <span class="fn">accelerate</span>(<span class="var">$amount</span>) {
+        <span class="var">$this</span><span class="op">-></span><span class="var">speed</span> <span class="op">+=</span> <span class="var">$amount</span>;
+        <span class="fn">echo</span> <span class="str">"Speed: {$this->speed} km/h"</span>;
+    }
+
+    <span class="kw">public function</span> <span class="fn">brake</span>() {
+        <span class="var">$this</span><span class="op">-></span><span class="var">speed</span> <span class="op">=</span> <span class="num">0</span>;
+        <span class="fn">echo</span> <span class="str">"Car stopped."</span>;
+    }
+}
+
+<span class="cm">// Creating objects (instances)</span>
+<span class="var">$myCar</span>   <span class="op">=</span> <span class="kw">new</span> <span class="cls">Car</span>();
+<span class="var">$myCar</span><span class="op">-></span><span class="var">brand</span> <span class="op">=</span> <span class="str">'Tesla'</span>;
+<span class="var">$myCar</span><span class="op">-></span><span class="var">model</span> <span class="op">=</span> <span class="str">'Model S'</span>;
+<span class="var">$myCar</span><span class="op">-></span><span class="fn">accelerate</span>(<span class="num">60</span>); <span class="cm">// Speed: 60 km/h</span>
+
+<span class="var">$yourCar</span> <span class="op">=</span> <span class="kw">new</span> <span class="cls">Car</span>(); <span class="cm">// Another independent object</span>
+<span class="var">$yourCar</span><span class="op">-></span><span class="var">brand</span> <span class="op">=</span> <span class="str">'BMW'</span>;`
+        },
+        {
+          heading: "The $this Keyword",
+          body: `Inside a class, <code>$this</code> refers to the current object instance. It lets methods access the object's own properties and other methods.`,
+          code: `<span class="kw">class</span> <span class="cls">Circle</span> {
+    <span class="kw">public</span> <span class="var">$radius</span>;
+
+    <span class="kw">public function</span> <span class="fn">area</span>() {
+        <span class="kw">return</span> <span class="num">M_PI</span> <span class="op">*</span> <span class="var">$this</span><span class="op">-></span><span class="var">radius</span> <span class="op">**</span> <span class="num">2</span>;
+    }
+
+    <span class="kw">public function</span> <span class="fn">describe</span>() {
+        <span class="kw">return</span> <span class="str">"Circle with radius {$this->radius}, area: "</span>
+             <span class="op">.</span> <span class="fn">round</span>(<span class="var">$this</span><span class="op">-></span><span class="fn">area</span>(), <span class="num">2</span>);
+    }
+}
+
+<span class="var">$c</span> <span class="op">=</span> <span class="kw">new</span> <span class="cls">Circle</span>();
+<span class="var">$c</span><span class="op">-></span><span class="var">radius</span> <span class="op">=</span> <span class="num">5</span>;
+<span class="fn">echo</span> <span class="var">$c</span><span class="op">-></span><span class="fn">describe</span>(); <span class="cm">// Circle with radius 5, area: 78.54</span>`
+        }
+      ],
+      callout: { type: "tip", title: "NAMING CONVENTION", text: "Class names use PascalCase (MyClassName). Properties and methods use camelCase (myMethodName). This is PSR-12 standard." }
+    },
+    quiz: [
+      {
+        q: "What keyword is used to create an instance of a class in PHP?",
+        opts: ["create", "instance", "new", "make"],
+        correct: 2,
+        explain: "The 'new' keyword instantiates a class: $obj = new MyClass();"
+      },
+      {
+        q: "What does '$this' refer to inside a class method?",
+        opts: ["The class definition", "The current object instance", "The parent class", "A static variable"],
+        correct: 1,
+        explain: "$this refers to the current object instance — the specific object the method is being called on."
+      },
+      {
+        q: "Which naming convention is standard for PHP class names?",
+        opts: ["snake_case", "camelCase", "PascalCase", "UPPER_CASE"],
+        correct: 2,
+        explain: "PHP class names use PascalCase (e.g., UserAccount, ShoppingCart) per PSR-12 standards."
+      }
+    ]
+  },
+  {
+    id: 2,
+    title: "Constructors & Destructors",
+    level: "beginner",
+    desc: "Initializing and cleaning up objects",
+    icon: "⟳",
+    content: {
+      intro: `A <strong>constructor</strong> is a special method automatically called when an object is created. A <strong>destructor</strong> is called when the object is destroyed or goes out of scope.`,
+      sections: [
+        {
+          heading: "The __construct() Method",
+          body: `Constructors allow you to initialize object properties at creation time. Use them to ensure objects start in a valid state.`,
+          code: `<span class="kw">class</span> <span class="cls">User</span> {
+    <span class="kw">public</span> <span class="var">$name</span>;
+    <span class="kw">public</span> <span class="var">$email</span>;
+    <span class="kw">private</span> <span class="var">$createdAt</span>;
+
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="var">$name</span>, <span class="var">$email</span>) {
+        <span class="var">$this</span><span class="op">-></span><span class="var">name</span>      <span class="op">=</span> <span class="var">$name</span>;
+        <span class="var">$this</span><span class="op">-></span><span class="var">email</span>     <span class="op">=</span> <span class="var">$email</span>;
+        <span class="var">$this</span><span class="op">-></span><span class="var">createdAt</span> <span class="op">=</span> <span class="kw">new</span> <span class="cls">DateTime</span>();
+        <span class="fn">echo</span> <span class="str">"User '{$name}' created.\\n"</span>;
+    }
+
+    <span class="kw">public function</span> <span class="fn">__destruct</span>() {
+        <span class="fn">echo</span> <span class="str">"User '{$this->name}' destroyed.\\n"</span>;
+    }
+
+    <span class="kw">public function</span> <span class="fn">getInfo</span>() {
+        <span class="kw">return</span> <span class="str">"{$this->name} &lt;{$this->email}&gt;"</span>;
+    }
+}
+
+<span class="var">$user</span> <span class="op">=</span> <span class="kw">new</span> <span class="cls">User</span>(<span class="str">'Alice'</span>, <span class="str">'alice@example.com'</span>);
+<span class="cm">// Output: User 'Alice' created.</span>
+<span class="fn">echo</span> <span class="var">$user</span><span class="op">-></span><span class="fn">getInfo</span>(); <span class="cm">// Alice &lt;alice@example.com&gt;</span>
+<span class="cm">// At end of script: User 'Alice' destroyed.</span>`
+        },
+        {
+          heading: "Constructor Promotion (PHP 8+)",
+          body: `PHP 8 introduced constructor property promotion — a shorthand to declare and initialize properties directly in the constructor parameters.`,
+          code: `<span class="cm">// Traditional way</span>
+<span class="kw">class</span> <span class="cls">Product</span> {
+    <span class="kw">public</span> <span class="var">$name</span>;
+    <span class="kw">public</span> <span class="var">$price</span>;
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="var">$name</span>, <span class="var">$price</span>) {
+        <span class="var">$this</span><span class="op">-></span><span class="var">name</span>  <span class="op">=</span> <span class="var">$name</span>;
+        <span class="var">$this</span><span class="op">-></span><span class="var">price</span> <span class="op">=</span> <span class="var">$price</span>;
+    }
+}
+
+<span class="cm">// PHP 8+ Promotion — much cleaner!</span>
+<span class="kw">class</span> <span class="cls">Product</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(
+        <span class="kw">public</span> <span class="var">string</span> <span class="var">$name</span>,
+        <span class="kw">public</span> <span class="var">float</span>  <span class="var">$price</span>,
+        <span class="kw">public</span> <span class="var">int</span>    <span class="var">$stock</span> <span class="op">=</span> <span class="num">0</span>
+    ) {}
+}
+
+<span class="var">$p</span> <span class="op">=</span> <span class="kw">new</span> <span class="cls">Product</span>(<span class="str">'Laptop'</span>, <span class="num">999.99</span>, <span class="num">10</span>);
+<span class="fn">echo</span> <span class="var">$p</span><span class="op">-></span><span class="var">name</span>;  <span class="cm">// Laptop</span>
+<span class="fn">echo</span> <span class="var">$p</span><span class="op">-></span><span class="var">price</span>; <span class="cm">// 999.99</span>`
+        }
+      ],
+      callout: { type: "tip", title: "PHP 8 TIP", text: "Constructor promotion (PHP 8+) drastically reduces boilerplate. Always use it for simple data classes and DTOs." }
+    },
+    quiz: [
+      {
+        q: "Which magic method is automatically called when an object is created?",
+        opts: ["__create()", "__init()", "__construct()", "__start()"],
+        correct: 2,
+        explain: "__construct() is the constructor magic method, automatically invoked when 'new ClassName()' is called."
+      },
+      {
+        q: "When is __destruct() called?",
+        opts: ["At the start of the script", "When the object goes out of scope or script ends", "When you call delete($obj)", "Only on fatal errors"],
+        correct: 1,
+        explain: "__destruct() is called automatically when the object is no longer referenced or when the script ends."
+      },
+      {
+        q: "Constructor property promotion was introduced in which PHP version?",
+        opts: ["PHP 7.0", "PHP 7.4", "PHP 8.0", "PHP 8.2"],
+        correct: 2,
+        explain: "Constructor property promotion was introduced in PHP 8.0, allowing properties to be declared directly in constructor parameters."
+      }
+    ]
+  },
+  {
+    id: 3,
+    title: "Access Modifiers & Encapsulation",
+    level: "beginner",
+    desc: "Controlling access to class members",
+    icon: "🔐",
+    content: {
+      intro: `<strong>Encapsulation</strong> means hiding the internal state of an object and only exposing what's necessary. PHP provides three access modifiers: <code>public</code>, <code>protected</code>, and <code>private</code>.`,
+      sections: [
+        {
+          heading: "Access Modifiers",
+          body: `Access modifiers control the visibility of properties and methods.`,
+          bullets: [
+            "public — Accessible from anywhere (inside, outside, child classes)",
+            "protected — Accessible inside the class and child classes only",
+            "private — Accessible only inside the declaring class"
+          ],
+          code: `<span class="kw">class</span> <span class="cls">BankAccount</span> {
+    <span class="kw">public</span>    <span class="var">string</span> <span class="var">$owner</span>;
+    <span class="kw">protected</span> <span class="var">float</span>  <span class="var">$balance</span>  <span class="op">=</span> <span class="num">0.0</span>;
+    <span class="kw">private</span>   <span class="var">string</span> <span class="var">$pin</span>;
+    <span class="kw">private</span>   <span class="var">array</span>  <span class="var">$log</span>      <span class="op">=</span> [];
+
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="var">string</span> <span class="var">$owner</span>, <span class="var">string</span> <span class="var">$pin</span>) {
+        <span class="var">$this</span><span class="op">-></span><span class="var">owner</span> <span class="op">=</span> <span class="var">$owner</span>;
+        <span class="var">$this</span><span class="op">-></span><span class="var">pin</span>   <span class="op">=</span> <span class="fn">password_hash</span>(<span class="var">$pin</span>, <span class="num">PASSWORD_BCRYPT</span>);
+    }
+
+    <span class="kw">public function</span> <span class="fn">deposit</span>(<span class="var">float</span> <span class="var">$amount</span>): <span class="var">void</span> {
+        <span class="var">$this</span><span class="op">-></span><span class="var">balance</span> <span class="op">+=</span> <span class="var">$amount</span>;
+        <span class="var">$this</span><span class="op">-></span><span class="fn">logTransaction</span>(<span class="str">"Deposit: +{$amount}"</span>);
+    }
+
+    <span class="kw">public function</span> <span class="fn">getBalance</span>(): <span class="var">float</span> {
+        <span class="kw">return</span> <span class="var">$this</span><span class="op">-></span><span class="var">balance</span>; <span class="cm">// Controlled read</span>
+    }
+
+    <span class="kw">private function</span> <span class="fn">logTransaction</span>(<span class="var">string</span> <span class="var">$msg</span>): <span class="var">void</span> {
+        <span class="var">$this</span><span class="op">-></span><span class="var">log</span>[] <span class="op">=</span> <span class="fn">date</span>(<span class="str">'H:i:s'</span>) <span class="op">.</span> <span class="str">' - '</span> <span class="op">.</span> <span class="var">$msg</span>;
+    }
+}
+
+<span class="var">$acc</span> <span class="op">=</span> <span class="kw">new</span> <span class="cls">BankAccount</span>(<span class="str">'Alice'</span>, <span class="str">'1234'</span>);
+<span class="var">$acc</span><span class="op">-></span><span class="fn">deposit</span>(<span class="num">500</span>);
+<span class="fn">echo</span> <span class="var">$acc</span><span class="op">-></span><span class="fn">getBalance</span>(); <span class="cm">// 500</span>
+<span class="cm">// $acc->pin — Fatal error! Private property.</span>`
+        },
+        {
+          heading: "Getters & Setters",
+          body: `Use getter/setter methods to provide controlled access to private properties, enabling validation and transformation.`,
+          code: `<span class="kw">class</span> <span class="cls">Temperature</span> {
+    <span class="kw">private</span> <span class="var">float</span> <span class="var">$celsius</span>;
+
+    <span class="kw">public function</span> <span class="fn">setCelsius</span>(<span class="var">float</span> <span class="var">$temp</span>): <span class="var">void</span> {
+        <span class="kw">if</span> (<span class="var">$temp</span> <span class="op">&lt;</span> <span class="op">-</span><span class="num">273.15</span>) {
+            <span class="kw">throw new</span> <span class="cls">InvalidArgumentException</span>(<span class="str">'Below absolute zero!'</span>);
+        }
+        <span class="var">$this</span><span class="op">-></span><span class="var">celsius</span> <span class="op">=</span> <span class="var">$temp</span>;
+    }
+
+    <span class="kw">public function</span> <span class="fn">getCelsius</span>(): <span class="var">float</span> { <span class="kw">return</span> <span class="var">$this</span><span class="op">-></span><span class="var">celsius</span>; }
+    <span class="kw">public function</span> <span class="fn">getFahrenheit</span>(): <span class="var">float</span> { <span class="kw">return</span> <span class="var">$this</span><span class="op">-></span><span class="var">celsius</span> <span class="op">*</span> <span class="num">9</span><span class="op">/</span><span class="num">5</span> <span class="op">+</span> <span class="num">32</span>; }
+}
+
+<span class="var">$t</span> <span class="op">=</span> <span class="kw">new</span> <span class="cls">Temperature</span>();
+<span class="var">$t</span><span class="op">-></span><span class="fn">setCelsius</span>(<span class="num">100</span>);
+<span class="fn">echo</span> <span class="var">$t</span><span class="op">-></span><span class="fn">getFahrenheit</span>(); <span class="cm">// 212</span>`
+        }
+      ],
+      callout: { type: "warn", title: "BEST PRACTICE", text: "Default to private for properties. Only expose what consumers need. This protects internal state from unexpected mutations." }
+    },
+    quiz: [
+      {
+        q: "Which access modifier makes a property accessible only within the class itself?",
+        opts: ["public", "protected", "private", "internal"],
+        correct: 2,
+        explain: "private restricts access to only the declaring class. Even child classes cannot access private members."
+      },
+      {
+        q: "Which access modifier allows child classes to access a property?",
+        opts: ["private", "protected", "internal", "readonly"],
+        correct: 1,
+        explain: "protected allows access from the class itself and any subclasses, but not from outside the class hierarchy."
+      },
+      {
+        q: "What is the main purpose of encapsulation?",
+        opts: ["To make code run faster", "To hide implementation details and protect data integrity", "To allow multiple inheritance", "To reduce file size"],
+        correct: 1,
+        explain: "Encapsulation hides internal state, exposing only what's necessary via a controlled public interface."
+      }
+    ]
+  },
+  {
+    id: 4,
+    title: "Inheritance",
+    level: "intermediate",
+    desc: "Extending classes and overriding methods",
+    icon: "⬆",
+    content: {
+      intro: `<strong>Inheritance</strong> allows a class to inherit properties and methods from another class. The child class can extend or override parent behavior. Use the <code>extends</code> keyword.`,
+      sections: [
+        {
+          heading: "extends & parent::",
+          body: `A child class inherits all public and protected members of the parent. Use <code>parent::</code> to call parent methods.`,
+          code: `<span class="kw">class</span> <span class="cls">Animal</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(
+        <span class="kw">protected</span> <span class="var">string</span> <span class="var">$name</span>
+    ) {}
+
+    <span class="kw">public function</span> <span class="fn">speak</span>(): <span class="var">string</span> {
+        <span class="kw">return</span> <span class="str">"{$this->name} makes a sound."</span>;
+    }
+
+    <span class="kw">public function</span> <span class="fn">describe</span>(): <span class="var">string</span> {
+        <span class="kw">return</span> <span class="str">"I am {$this->name}."</span>;
+    }
+}
+
+<span class="kw">class</span> <span class="cls">Dog</span> <span class="kw">extends</span> <span class="cls">Animal</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="var">string</span> <span class="var">$name</span>, <span class="kw">private</span> <span class="var">string</span> <span class="var">$breed</span>) {
+        <span class="kw">parent</span>::<span class="fn">__construct</span>(<span class="var">$name</span>); <span class="cm">// Call parent constructor</span>
+    }
+
+    <span class="kw">public function</span> <span class="fn">speak</span>(): <span class="var">string</span> { <span class="cm">// Override parent method</span>
+        <span class="kw">return</span> <span class="str">"{$this->name} barks: Woof!"</span>;
+    }
+
+    <span class="kw">public function</span> <span class="fn">describe</span>(): <span class="var">string</span> {
+        <span class="kw">return</span> <span class="kw">parent</span>::<span class="fn">describe</span>() <span class="op">.</span> <span class="str">" I'm a {$this->breed}."</span>;
+    }
+}
+
+<span class="kw">class</span> <span class="cls">Cat</span> <span class="kw">extends</span> <span class="cls">Animal</span> {
+    <span class="kw">public function</span> <span class="fn">speak</span>(): <span class="var">string</span> {
+        <span class="kw">return</span> <span class="str">"{$this->name} says: Meow!"</span>;
+    }
+}
+
+<span class="var">$dog</span> <span class="op">=</span> <span class="kw">new</span> <span class="cls">Dog</span>(<span class="str">'Rex'</span>, <span class="str">'Labrador'</span>);
+<span class="fn">echo</span> <span class="var">$dog</span><span class="op">-></span><span class="fn">speak</span>();    <span class="cm">// Rex barks: Woof!</span>
+<span class="fn">echo</span> <span class="var">$dog</span><span class="op">-></span><span class="fn">describe</span>(); <span class="cm">// I am Rex. I'm a Labrador.</span>
+
+<span class="var">$cat</span> <span class="op">=</span> <span class="kw">new</span> <span class="cls">Cat</span>(<span class="str">'Whiskers'</span>);
+<span class="fn">echo</span> <span class="var">$cat</span><span class="op">-></span><span class="fn">speak</span>(); <span class="cm">// Whiskers says: Meow!</span>`
+        },
+        {
+          heading: "The final Keyword",
+          body: `Mark a class as <code>final</code> to prevent extension, or mark a method as <code>final</code> to prevent override. Useful for security-critical code.`,
+          code: `<span class="kw">final class</span> <span class="cls">Singleton</span> {
+    <span class="kw">private static</span> <span class="var">?self</span> <span class="var">$instance</span> <span class="op">=</span> <span class="kw">null</span>;
+    <span class="kw">private function</span> <span class="fn">__construct</span>() {}
+
+    <span class="kw">public static function</span> <span class="fn">getInstance</span>(): <span class="var">static</span> {
+        <span class="kw">return</span> <span class="var">static</span>::<span class="var">$instance</span> <span class="op">??=</span> <span class="kw">new</span> <span class="var">static</span>();
+    }
+}
+
+<span class="kw">class</span> <span class="cls">Vehicle</span> {
+    <span class="kw">final public function</span> <span class="fn">getWheels</span>(): <span class="var">int</span> {
+        <span class="kw">return</span> <span class="num">4</span>; <span class="cm">// Cannot be overridden in child classes</span>
+    }
+}`
+        }
+      ],
+      callout: { type: "info", title: "INHERITANCE RULE", text: "PHP only supports single inheritance (one parent class). For multiple behaviors, use interfaces and traits instead." }
+    },
+    quiz: [
+      {
+        q: "Which keyword is used to inherit from a parent class in PHP?",
+        opts: ["implements", "inherits", "extends", "uses"],
+        correct: 2,
+        explain: "The 'extends' keyword is used: class Child extends Parent { ... }"
+      },
+      {
+        q: "How do you call the parent class constructor from a child class?",
+        opts: ["super()", "parent::__construct()", "base::__construct()", "$parent->__construct()"],
+        correct: 1,
+        explain: "parent::__construct() calls the parent constructor. The parent:: keyword references the immediate parent class."
+      },
+      {
+        q: "What does marking a class as 'final' do?",
+        opts: ["Prevents the class from being instantiated", "Prevents the class from being extended", "Makes all methods private", "Removes access modifiers"],
+        correct: 1,
+        explain: "A final class cannot be extended (subclassed). A final method cannot be overridden in child classes."
+      }
+    ]
+  },
+  {
+    id: 5,
+    title: "Interfaces & Abstract Classes",
+    level: "intermediate",
+    desc: "Defining contracts and blueprints",
+    icon: "◻",
+    content: {
+      intro: `<strong>Interfaces</strong> define a contract — a set of methods a class must implement. <strong>Abstract classes</strong> can have both concrete and abstract methods. Together they enable powerful polymorphism.`,
+      sections: [
+        {
+          heading: "Interfaces",
+          body: `Interfaces use the <code>interface</code> keyword. All methods are implicitly public and abstract. A class can implement multiple interfaces.`,
+          code: `<span class="kw">interface</span> <span class="cls">Drawable</span> {
+    <span class="kw">public function</span> <span class="fn">draw</span>(): <span class="var">string</span>;
+    <span class="kw">public function</span> <span class="fn">getColor</span>(): <span class="var">string</span>;
+}
+
+<span class="kw">interface</span> <span class="cls">Resizable</span> {
+    <span class="kw">public function</span> <span class="fn">resize</span>(<span class="var">float</span> <span class="var">$factor</span>): <span class="var">void</span>;
+}
+
+<span class="kw">class</span> <span class="cls">Circle</span> <span class="kw">implements</span> <span class="cls">Drawable</span>, <span class="cls">Resizable</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(
+        <span class="kw">private</span> <span class="var">float</span>  <span class="var">$radius</span>,
+        <span class="kw">private</span> <span class="var">string</span> <span class="var">$color</span> <span class="op">=</span> <span class="str">'red'</span>
+    ) {}
+
+    <span class="kw">public function</span> <span class="fn">draw</span>(): <span class="var">string</span> {
+        <span class="kw">return</span> <span class="str">"Drawing {$this->color} circle r={$this->radius}"</span>;
+    }
+
+    <span class="kw">public function</span> <span class="fn">getColor</span>(): <span class="var">string</span> { <span class="kw">return</span> <span class="var">$this</span><span class="op">-></span><span class="var">color</span>; }
+
+    <span class="kw">public function</span> <span class="fn">resize</span>(<span class="var">float</span> <span class="var">$factor</span>): <span class="var">void</span> {
+        <span class="var">$this</span><span class="op">-></span><span class="var">radius</span> <span class="op">*=</span> <span class="var">$factor</span>;
+    }
+}
+
+<span class="var">$c</span> <span class="op">=</span> <span class="kw">new</span> <span class="cls">Circle</span>(<span class="num">10</span>, <span class="str">'blue'</span>);
+<span class="fn">echo</span> <span class="var">$c</span><span class="op">-></span><span class="fn">draw</span>(); <span class="cm">// Drawing blue circle r=10</span>
+<span class="var">$c</span><span class="op">-></span><span class="fn">resize</span>(<span class="num">2</span>);
+<span class="fn">echo</span> <span class="var">$c</span><span class="op">-></span><span class="fn">draw</span>(); <span class="cm">// Drawing blue circle r=20</span>`
+        },
+        {
+          heading: "Abstract Classes",
+          body: `Abstract classes can have concrete implementations. They cannot be instantiated directly — they must be subclassed. Use when you want partial implementation with required overrides.`,
+          code: `<span class="kw">abstract class</span> <span class="cls">Shape</span> {
+    <span class="kw">abstract public function</span> <span class="fn">area</span>(): <span class="var">float</span>;
+    <span class="kw">abstract public function</span> <span class="fn">perimeter</span>(): <span class="var">float</span>;
+
+    <span class="cm">// Concrete method — shared by all shapes</span>
+    <span class="kw">public function</span> <span class="fn">describe</span>(): <span class="var">string</span> {
+        <span class="kw">return</span> <span class="fn">sprintf</span>(
+            <span class="str">"%s — Area: %.2f, Perimeter: %.2f"</span>,
+            <span class="fn">get_class</span>(<span class="var">$this</span>), <span class="var">$this</span><span class="op">-></span><span class="fn">area</span>(), <span class="var">$this</span><span class="op">-></span><span class="fn">perimeter</span>()
+        );
+    }
+}
+
+<span class="kw">class</span> <span class="cls">Rectangle</span> <span class="kw">extends</span> <span class="cls">Shape</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(
+        <span class="kw">private</span> <span class="var">float</span> <span class="var">$w</span>,
+        <span class="kw">private</span> <span class="var">float</span> <span class="var">$h</span>
+    ) {}
+
+    <span class="kw">public function</span> <span class="fn">area</span>(): <span class="var">float</span>      { <span class="kw">return</span> <span class="var">$this</span><span class="op">-></span><span class="var">w</span> <span class="op">*</span> <span class="var">$this</span><span class="op">-></span><span class="var">h</span>; }
+    <span class="kw">public function</span> <span class="fn">perimeter</span>(): <span class="var">float</span> { <span class="kw">return</span> <span class="num">2</span> <span class="op">*</span> (<span class="var">$this</span><span class="op">-></span><span class="var">w</span> <span class="op">+</span> <span class="var">$this</span><span class="op">-></span><span class="var">h</span>); }
+}
+
+<span class="var">$r</span> <span class="op">=</span> <span class="kw">new</span> <span class="cls">Rectangle</span>(<span class="num">5</span>, <span class="num">3</span>);
+<span class="fn">echo</span> <span class="var">$r</span><span class="op">-></span><span class="fn">describe</span>(); <span class="cm">// Rectangle — Area: 15.00, Perimeter: 16.00</span>`
+        }
+      ],
+      callout: { type: "info", title: "WHEN TO USE WHICH", text: "Use interfaces when you want multiple unrelated classes to share a contract. Use abstract classes when related classes share some implementation. A class can extend one abstract class AND implement multiple interfaces." }
+    },
+    quiz: [
+      {
+        q: "Can a class implement multiple interfaces in PHP?",
+        opts: ["No, only one interface allowed", "Yes, separated by commas", "Only with abstract classes", "Only in PHP 8+"],
+        correct: 1,
+        explain: "A class can implement multiple interfaces: class Foo implements Bar, Baz { ... }"
+      },
+      {
+        q: "Can you instantiate an abstract class directly?",
+        opts: ["Yes, using new AbstractClass()", "No, abstract classes cannot be instantiated", "Yes, but only in PHP 8", "Only if all methods are concrete"],
+        correct: 1,
+        explain: "Abstract classes cannot be instantiated directly. They must be subclassed, and the subclass must implement all abstract methods."
+      },
+      {
+        q: "What is the key difference between an interface and an abstract class?",
+        opts: [
+          "Interfaces can have concrete methods, abstract classes cannot",
+          "Abstract classes support state (properties), interfaces only define method signatures",
+          "Interfaces use 'extends', abstract classes use 'implements'",
+          "There is no difference"
+        ],
+        correct: 1,
+        explain: "Abstract classes can have properties and concrete methods. Interfaces (pre-PHP 8) only define method signatures. Abstract classes are for 'is-a' relationships; interfaces for capabilities."
+      }
+    ]
+  },
+  {
+    id: 6,
+    title: "Traits",
+    level: "intermediate",
+    desc: "Reusable code mixins for PHP classes",
+    icon: "⧉",
+    content: {
+      intro: `<strong>Traits</strong> are a mechanism for code reuse in PHP's single-inheritance model. A trait is like a mixin — it provides methods that can be included in multiple classes without inheritance.`,
+      sections: [
+        {
+          heading: "Defining and Using Traits",
+          body: `Define traits with the <code>trait</code> keyword and include them with <code>use</code> inside a class.`,
+          code: `<span class="kw">trait</span> <span class="cls">Timestampable</span> {
+    <span class="kw">private</span> <span class="var">?DateTime</span> <span class="var">$createdAt</span> <span class="op">=</span> <span class="kw">null</span>;
+    <span class="kw">private</span> <span class="var">?DateTime</span> <span class="var">$updatedAt</span> <span class="op">=</span> <span class="kw">null</span>;
+
+    <span class="kw">public function</span> <span class="fn">touch</span>(): <span class="var">void</span> {
+        <span class="var">$this</span><span class="op">-></span><span class="var">createdAt</span> <span class="op">??=</span> <span class="kw">new</span> <span class="cls">DateTime</span>();
+        <span class="var">$this</span><span class="op">-></span><span class="var">updatedAt</span>   <span class="op">=</span> <span class="kw">new</span> <span class="cls">DateTime</span>();
+    }
+
+    <span class="kw">public function</span> <span class="fn">getCreatedAt</span>(): <span class="var">?DateTime</span> { <span class="kw">return</span> <span class="var">$this</span><span class="op">-></span><span class="var">createdAt</span>; }
+    <span class="kw">public function</span> <span class="fn">getUpdatedAt</span>(): <span class="var">?DateTime</span> { <span class="kw">return</span> <span class="var">$this</span><span class="op">-></span><span class="var">updatedAt</span>; }
+}
+
+<span class="kw">trait</span> <span class="cls">SoftDeletable</span> {
+    <span class="kw">private</span> <span class="var">bool</span> <span class="var">$deleted</span> <span class="op">=</span> <span class="kw">false</span>;
+    <span class="kw">public function</span> <span class="fn">delete</span>(): <span class="var">void</span>       { <span class="var">$this</span><span class="op">-></span><span class="var">deleted</span> <span class="op">=</span> <span class="kw">true</span>; }
+    <span class="kw">public function</span> <span class="fn">restore</span>(): <span class="var">void</span>      { <span class="var">$this</span><span class="op">-></span><span class="var">deleted</span> <span class="op">=</span> <span class="kw">false</span>; }
+    <span class="kw">public function</span> <span class="fn">isDeleted</span>(): <span class="var">bool</span>    { <span class="kw">return</span> <span class="var">$this</span><span class="op">-></span><span class="var">deleted</span>; }
+}
+
+<span class="kw">class</span> <span class="cls">Post</span> {
+    <span class="kw">use</span> <span class="cls">Timestampable</span>, <span class="cls">SoftDeletable</span>; <span class="cm">// Multiple traits!</span>
+
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="kw">public</span> <span class="var">string</span> <span class="var">$title</span>) {
+        <span class="var">$this</span><span class="op">-></span><span class="fn">touch</span>();
+    }
+}
+
+<span class="var">$post</span> <span class="op">=</span> <span class="kw">new</span> <span class="cls">Post</span>(<span class="str">'Hello World'</span>);
+<span class="var">$post</span><span class="op">-></span><span class="fn">delete</span>();
+<span class="fn">var_dump</span>(<span class="var">$post</span><span class="op">-></span><span class="fn">isDeleted</span>()); <span class="cm">// bool(true)</span>
+<span class="var">$post</span><span class="op">-></span><span class="fn">restore</span>();
+<span class="fn">var_dump</span>(<span class="var">$post</span><span class="op">-></span><span class="fn">isDeleted</span>()); <span class="cm">// bool(false)</span>`
+        }
+      ],
+      callout: { type: "tip", title: "TRAITS vs INHERITANCE", text: "Use traits for horizontal code reuse (logging, timestamps, soft-delete). Use inheritance for 'is-a' relationships. Traits solve the diamond problem of multiple inheritance cleanly." }
+    },
+    quiz: [
+      {
+        q: "Which keyword includes a trait inside a class?",
+        opts: ["include", "extends", "use", "import"],
+        correct: 2,
+        explain: "The 'use' keyword includes a trait: class MyClass { use MyTrait; }"
+      },
+      {
+        q: "Can a class use multiple traits?",
+        opts: ["No, only one trait allowed", "Yes, by listing them separated by commas", "Only abstract classes can use multiple traits", "Only with interfaces"],
+        correct: 1,
+        explain: "A class can use multiple traits: use TraitA, TraitB, TraitC;"
+      },
+      {
+        q: "What problem do traits help solve in PHP?",
+        opts: ["Memory management", "Code reuse without multiple inheritance", "Type checking", "Autoloading classes"],
+        correct: 1,
+        explain: "PHP only supports single inheritance. Traits allow reusing methods across unrelated class hierarchies — solving the multiple inheritance problem."
+      }
+    ]
+  },
+  {
+    id: 7,
+    title: "Static Properties & Methods",
+    level: "intermediate",
+    desc: "Class-level members shared across instances",
+    icon: "⬛",
+    content: {
+      intro: `<strong>Static</strong> properties and methods belong to the class itself, not to any particular instance. They're shared across all objects and accessed with <code>::</code> (the scope resolution operator).`,
+      sections: [
+        {
+          heading: "Static Members",
+          body: `Use <code>static</code> keyword. Access with <code>ClassName::$property</code> or <code>self::</code> inside the class.`,
+          code: `<span class="kw">class</span> <span class="cls">Counter</span> {
+    <span class="kw">private static</span> <span class="var">int</span> <span class="var">$count</span> <span class="op">=</span> <span class="num">0</span>;
+
+    <span class="kw">public function</span> <span class="fn">__construct</span>() {
+        <span class="var">self</span>::<span class="var">$count</span>++;
+    }
+
+    <span class="kw">public static function</span> <span class="fn">getCount</span>(): <span class="var">int</span> {
+        <span class="kw">return</span> <span class="var">self</span>::<span class="var">$count</span>;
+    }
+
+    <span class="kw">public static function</span> <span class="fn">reset</span>(): <span class="var">void</span> {
+        <span class="var">self</span>::<span class="var">$count</span> <span class="op">=</span> <span class="num">0</span>;
+    }
+}
+
+<span class="kw">new</span> <span class="cls">Counter</span>();
+<span class="kw">new</span> <span class="cls">Counter</span>();
+<span class="kw">new</span> <span class="cls">Counter</span>();
+<span class="fn">echo</span> <span class="cls">Counter</span>::<span class="fn">getCount</span>(); <span class="cm">// 3</span>
+<span class="cls">Counter</span>::<span class="fn">reset</span>();
+<span class="fn">echo</span> <span class="cls">Counter</span>::<span class="fn">getCount</span>(); <span class="cm">// 0</span>
+
+<span class="cm">// Static Factory Pattern</span>
+<span class="kw">class</span> <span class="cls">Color</span> {
+    <span class="kw">private function</span> <span class="fn">__construct</span>(
+        <span class="kw">public readonly</span> <span class="var">int</span> <span class="var">$r</span>,
+        <span class="kw">public readonly</span> <span class="var">int</span> <span class="var">$g</span>,
+        <span class="kw">public readonly</span> <span class="var">int</span> <span class="var">$b</span>
+    ) {}
+
+    <span class="kw">public static function</span> <span class="fn">fromHex</span>(<span class="var">string</span> <span class="var">$hex</span>): <span class="var">static</span> {
+        <span class="var">$hex</span> <span class="op">=</span> <span class="fn">ltrim</span>(<span class="var">$hex</span>, <span class="str">'#'</span>);
+        <span class="kw">return</span> <span class="kw">new</span> <span class="var">static</span>(
+            <span class="fn">hexdec</span>(<span class="fn">substr</span>(<span class="var">$hex</span>, <span class="num">0</span>, <span class="num">2</span>)),
+            <span class="fn">hexdec</span>(<span class="fn">substr</span>(<span class="var">$hex</span>, <span class="num">2</span>, <span class="num">2</span>)),
+            <span class="fn">hexdec</span>(<span class="fn">substr</span>(<span class="var">$hex</span>, <span class="num">4</span>, <span class="num">2</span>))
+        );
+    }
+}
+
+<span class="var">$red</span> <span class="op">=</span> <span class="cls">Color</span>::<span class="fn">fromHex</span>(<span class="str">'#FF0000'</span>);
+<span class="fn">echo</span> <span class="str">"{$red->r}, {$red->g}, {$red->b}"</span>; <span class="cm">// 255, 0, 0</span>`
+        }
+      ],
+      callout: { type: "warn", title: "CAUTION", text: "Overusing static methods creates hidden global state and makes testing harder. Prefer dependency injection over static singletons in most cases." }
+    },
+    quiz: [
+      {
+        q: "How do you access a static method from inside the same class?",
+        opts: ["$this->methodName()", "self::methodName()", "parent::methodName()", "static->methodName()"],
+        correct: 1,
+        explain: "self::methodName() accesses static members from inside the class. $this cannot be used with static members."
+      },
+      {
+        q: "What operator is used to access static members from outside the class?",
+        opts: ["->", "=>", "::", "::>"],
+        correct: 2,
+        explain: "The scope resolution operator :: is used: ClassName::$staticProp or ClassName::staticMethod()"
+      },
+      {
+        q: "Are static properties shared across all instances of a class?",
+        opts: ["No, each instance has its own copy", "Yes, static properties are class-level and shared", "Only if declared public", "Only inside child classes"],
+        correct: 1,
+        explain: "Static properties belong to the class itself, not any instance. All objects share the same static property value."
+      }
+    ]
+  },
+  {
+    id: 8,
+    title: "Magic Methods",
+    level: "intermediate",
+    desc: "__toString, __get, __set, __call and more",
+    icon: "✦",
+    content: {
+      intro: `PHP has special <strong>magic methods</strong> prefixed with double underscores (<code>__</code>). They are automatically triggered in response to specific events, enabling powerful metaprogramming patterns.`,
+      sections: [
+        {
+          heading: "Essential Magic Methods",
+          body: `The most commonly used magic methods include __toString, __get, __set, __isset, __unset, and __call.`,
+          code: `<span class="kw">class</span> <span class="cls">MagicBox</span> {
+    <span class="kw">private</span> <span class="var">array</span> <span class="var">$data</span> <span class="op">=</span> [];
+    <span class="kw">private</span> <span class="var">array</span> <span class="var">$callLog</span> <span class="op">=</span> [];
+
+    <span class="cm">// Called when object used as string</span>
+    <span class="kw">public function</span> <span class="fn">__toString</span>(): <span class="var">string</span> {
+        <span class="kw">return</span> <span class="fn">json_encode</span>(<span class="var">$this</span><span class="op">-></span><span class="var">data</span>, <span class="num">JSON_PRETTY_PRINT</span>);
+    }
+
+    <span class="cm">// Called when getting a non-existent property</span>
+    <span class="kw">public function</span> <span class="fn">__get</span>(<span class="var">string</span> <span class="var">$name</span>): <span class="kw">mixed</span> {
+        <span class="kw">return</span> <span class="var">$this</span><span class="op">-></span><span class="var">data</span>[<span class="var">$name</span>] <span class="op">??</span> <span class="kw">null</span>;
+    }
+
+    <span class="cm">// Called when setting a non-existent property</span>
+    <span class="kw">public function</span> <span class="fn">__set</span>(<span class="var">string</span> <span class="var">$name</span>, <span class="kw">mixed</span> <span class="var">$value</span>): <span class="var">void</span> {
+        <span class="var">$this</span><span class="op">-></span><span class="var">data</span>[<span class="var">$name</span>] <span class="op">=</span> <span class="var">$value</span>;
+    }
+
+    <span class="cm">// Called for isset() on non-existent properties</span>
+    <span class="kw">public function</span> <span class="fn">__isset</span>(<span class="var">string</span> <span class="var">$name</span>): <span class="var">bool</span> {
+        <span class="kw">return</span> <span class="fn">isset</span>(<span class="var">$this</span><span class="op">-></span><span class="var">data</span>[<span class="var">$name</span>]);
+    }
+
+    <span class="cm">// Called for undefined method calls</span>
+    <span class="kw">public function</span> <span class="fn">__call</span>(<span class="var">string</span> <span class="var">$name</span>, <span class="var">array</span> <span class="var">$args</span>): <span class="kw">mixed</span> {
+        <span class="var">$this</span><span class="op">-></span><span class="var">callLog</span>[] <span class="op">=</span> <span class="str">"{$name}(" </span><span class="op">.</span> <span class="fn">implode</span>(<span class="str">','</span>, <span class="var">$args</span>) <span class="op">.</span> <span class="str">")"</span>;
+        <span class="kw">return</span> <span class="var">$this</span>; <span class="cm">// Enable chaining</span>
+    }
+}
+
+<span class="var">$box</span> <span class="op">=</span> <span class="kw">new</span> <span class="cls">MagicBox</span>();
+<span class="var">$box</span><span class="op">-></span><span class="var">name</span>  <span class="op">=</span> <span class="str">'PHP'</span>;  <span class="cm">// Calls __set</span>
+<span class="var">$box</span><span class="op">-></span><span class="var">version</span> <span class="op">=</span> <span class="num">8.3</span>; <span class="cm">// Calls __set</span>
+<span class="fn">echo</span> <span class="var">$box</span><span class="op">-></span><span class="var">name</span>;  <span class="cm">// PHP — calls __get</span>
+<span class="fn">echo</span> <span class="var">$box</span>;       <span class="cm">// JSON — calls __toString</span>
+
+<span class="var">$box</span><span class="op">-></span><span class="fn">filter</span>(<span class="str">'active'</span>)<span class="op">-></span><span class="fn">sort</span>(<span class="str">'name'</span>); <span class="cm">// Calls __call twice</span>`
+        }
+      ],
+      callout: { type: "info", title: "MAGIC METHODS LIST", text: "__construct, __destruct, __get, __set, __isset, __unset, __call, __callStatic, __toString, __invoke, __clone, __sleep, __wakeup, __serialize, __unserialize" }
+    },
+    quiz: [
+      {
+        q: "Which magic method is triggered when an object is used as a string?",
+        opts: ["__string()", "__cast()", "__toString()", "__print()"],
+        correct: 2,
+        explain: "__toString() is called when an object is cast to a string or used in echo/print."
+      },
+      {
+        q: "What does __get() do?",
+        opts: ["Returns all properties", "Is called when accessing an inaccessible or non-existent property", "Gets the class name", "Initializes private properties"],
+        correct: 1,
+        explain: "__get($name) is invoked when reading a property that doesn't exist or is inaccessible. Useful for dynamic property access."
+      },
+      {
+        q: "Which magic method is called when invoking an object like a function?",
+        opts: ["__run()", "__execute()", "__call()", "__invoke()"],
+        correct: 3,
+        explain: "__invoke() is called when you use an object like $obj() — treating the object itself as a callable."
+      }
+    ]
+  },
+  {
+    id: 9,
+    title: "Namespaces & Autoloading",
+    level: "advanced",
+    desc: "Organizing code and PSR-4 autoloading",
+    icon: "⬡",
+    content: {
+      intro: `<strong>Namespaces</strong> prevent class name collisions in large projects. <strong>Autoloading</strong> eliminates the need to manually require/include files — PHP automatically loads classes when needed.`,
+      sections: [
+        {
+          heading: "Namespaces",
+          body: `Namespaces organize code like folders in a filesystem. They're declared at the top of a file with the <code>namespace</code> keyword.`,
+          code: `<span class="cm">// File: src/Database/Connection.php</span>
+<span class="kw">namespace</span> App\Database;
+
+<span class="kw">class</span> <span class="cls">Connection</span> {
+    <span class="kw">private static</span> <span class="var">?\PDO</span> <span class="var">$instance</span> <span class="op">=</span> <span class="kw">null</span>;
+
+    <span class="kw">public static function</span> <span class="fn">getInstance</span>(<span class="var">string</span> <span class="var">$dsn</span>): \<span class="cls">PDO</span> {
+        <span class="kw">return</span> <span class="var">self</span>::<span class="var">$instance</span> <span class="op">??=</span> <span class="kw">new</span> \<span class="cls">PDO</span>(<span class="var">$dsn</span>);
+    }
+}
+
+<span class="cm">// File: src/Models/User.php</span>
+<span class="kw">namespace</span> App\Models;
+
+<span class="kw">use</span> App\Database\<span class="cls">Connection</span>;
+<span class="kw">use</span> App\Traits\<span class="cls">Timestampable</span>;
+
+<span class="kw">class</span> <span class="cls">User</span> {
+    <span class="kw">use</span> <span class="cls">Timestampable</span>;
+
+    <span class="kw">public function</span> <span class="fn">find</span>(<span class="var">int</span> <span class="var">$id</span>): <span class="var">array</span> {
+        <span class="var">$pdo</span> <span class="op">=</span> <span class="cls">Connection</span>::<span class="fn">getInstance</span>(<span class="var">$_ENV</span>[<span class="str">'DB_DSN'</span>]);
+        <span class="var">$stmt</span> <span class="op">=</span> <span class="var">$pdo</span><span class="op">-></span><span class="fn">prepare</span>(<span class="str">'SELECT * FROM users WHERE id = ?'</span>);
+        <span class="var">$stmt</span><span class="op">-></span><span class="fn">execute</span>([<span class="var">$id</span>]);
+        <span class="kw">return</span> <span class="var">$stmt</span><span class="op">-></span><span class="fn">fetch</span>(\<span class="cls">PDO</span>::FETCH_ASSOC);
+    }
+}
+
+<span class="cm">// File: index.php — Using the classes</span>
+<span class="kw">use</span> App\Models\<span class="cls">User</span>;
+
+<span class="var">$user</span> <span class="op">=</span> <span class="kw">new</span> <span class="cls">User</span>();
+<span class="var">$data</span> <span class="op">=</span> <span class="var">$user</span><span class="op">-></span><span class="fn">find</span>(<span class="num">1</span>);</span>`
+        },
+        {
+          heading: "PSR-4 Autoloading with Composer",
+          body: `Composer's autoloader follows PSR-4: namespace prefix maps to a directory. Configure in composer.json.`,
+          code: `<span class="cm">// composer.json</span>
+{
+    <span class="str">"autoload"</span>: {
+        <span class="str">"psr-4"</span>: {
+            <span class="str">"App\\"</span>: <span class="str">"src/"</span>
+        }
+    }
+}
+
+<span class="cm">// Run: composer dump-autoload</span>
+<span class="cm">// Then in index.php:</span>
+<span class="kw">require</span> <span class="str">'vendor/autoload.php'</span>;
+
+<span class="cm">// App\Models\User → src/Models/User.php (auto-loaded!)</span>
+<span class="cm">// App\Database\Connection → src/Database/Connection.php</span>
+
+<span class="cm">// Manual autoloader (without Composer)</span>
+<span class="fn">spl_autoload_register</span>(<span class="kw">function</span> (<span class="var">string</span> <span class="var">$class</span>): <span class="var">void</span> {
+    <span class="var">$path</span> <span class="op">=</span> <span class="fn">str_replace</span>([<span class="str">'\\'</span>, <span class="str">'App\\'</span>], [<span class="str">'/'</span>, <span class="str">'src/'</span>], <span class="var">$class</span>);
+    <span class="kw">if</span> (<span class="fn">file_exists</span>(<span class="var">$path</span> <span class="op">.</span> <span class="str">'.php'</span>)) {
+        <span class="kw">require</span> <span class="var">$path</span> <span class="op">.</span> <span class="str">'.php'</span>;
+    }
+});</span>`
+        }
+      ],
+      callout: { type: "tip", title: "INDUSTRY STANDARD", text: "Every professional PHP project uses Composer + PSR-4 autoloading. Never manually require/include class files in modern PHP projects." }
+    },
+    quiz: [
+      {
+        q: "What is the purpose of namespaces in PHP?",
+        opts: ["To speed up code execution", "To prevent class name collisions and organize code", "To enable multiple inheritance", "To create global variables"],
+        correct: 1,
+        explain: "Namespaces organize code and prevent conflicts — two libraries can both have a 'User' class if they're in different namespaces."
+      },
+      {
+        q: "What PSR standard defines the PHP autoloading specification?",
+        opts: ["PSR-1", "PSR-2", "PSR-4", "PSR-12"],
+        correct: 2,
+        explain: "PSR-4 defines autoloading: namespace prefix maps to a base directory, with sub-namespaces mapping to subdirectories."
+      },
+      {
+        q: "Which Composer command regenerates the autoload files?",
+        opts: ["composer update", "composer install", "composer dump-autoload", "composer refresh"],
+        correct: 2,
+        explain: "'composer dump-autoload' regenerates the vendor/autoload.php file after changes to namespace mappings."
+      }
+    ]
+  },
+  {
+    id: 10,
+    title: "Design Patterns",
+    level: "advanced",
+    desc: "Singleton, Factory, Observer, Strategy",
+    icon: "◈",
+    content: {
+      intro: `<strong>Design patterns</strong> are proven, reusable solutions to common software design problems. They are templates — not code — that guide how to structure your OOP code elegantly.`,
+      sections: [
+        {
+          heading: "Singleton Pattern",
+          body: `Ensures only one instance of a class exists throughout the application lifecycle. Common for database connections, logging, configuration.`,
+          code: `<span class="kw">class</span> <span class="cls">Logger</span> {
+    <span class="kw">private static</span> <span class="var">?self</span> <span class="var">$instance</span> <span class="op">=</span> <span class="kw">null</span>;
+    <span class="kw">private</span> <span class="var">array</span> <span class="var">$logs</span> <span class="op">=</span> [];
+
+    <span class="kw">private function</span> <span class="fn">__construct</span>() {}        <span class="cm">// Prevent direct instantiation</span>
+    <span class="kw">private function</span> <span class="fn">__clone</span>() {}            <span class="cm">// Prevent cloning</span>
+    <span class="kw">private function</span> <span class="fn">__wakeup</span>() {}           <span class="cm">// Prevent unserialize</span>
+
+    <span class="kw">public static function</span> <span class="fn">getInstance</span>(): <span class="var">static</span> {
+        <span class="kw">return</span> <span class="var">static</span>::<span class="var">$instance</span> <span class="op">??=</span> <span class="kw">new</span> <span class="var">static</span>();
+    }
+
+    <span class="kw">public function</span> <span class="fn">log</span>(<span class="var">string</span> <span class="var">$level</span>, <span class="var">string</span> <span class="var">$msg</span>): <span class="var">void</span> {
+        <span class="var">$this</span><span class="op">-></span><span class="var">logs</span>[] <span class="op">=</span> <span class="fn">sprintf</span>(<span class="str">"[%s][%s] %s"</span>, <span class="fn">date</span>(<span class="str">'H:i:s'</span>), <span class="fn">strtoupper</span>(<span class="var">$level</span>), <span class="var">$msg</span>);
+    }
+
+    <span class="kw">public function</span> <span class="fn">getLogs</span>(): <span class="var">array</span> { <span class="kw">return</span> <span class="var">$this</span><span class="op">-></span><span class="var">logs</span>; }
+}
+
+<span class="cls">Logger</span>::<span class="fn">getInstance</span>()<span class="op">-></span><span class="fn">log</span>(<span class="str">'info'</span>, <span class="str">'App started'</span>);
+<span class="cls">Logger</span>::<span class="fn">getInstance</span>()<span class="op">-></span><span class="fn">log</span>(<span class="str">'error'</span>, <span class="str">'DB connection failed'</span>);
+<span class="cm">// Both use the SAME instance</span></span>`
+        },
+        {
+          heading: "Strategy Pattern",
+          body: `Defines a family of algorithms, encapsulates each one, and makes them interchangeable. Great for payment processors, sorting, compression.`,
+          code: `<span class="kw">interface</span> <span class="cls">PaymentStrategy</span> {
+    <span class="kw">public function</span> <span class="fn">pay</span>(<span class="var">float</span> <span class="var">$amount</span>): <span class="var">string</span>;
+}
+
+<span class="kw">class</span> <span class="cls">CreditCard</span> <span class="kw">implements</span> <span class="cls">PaymentStrategy</span> {
+    <span class="kw">public function</span> <span class="fn">pay</span>(<span class="var">float</span> <span class="var">$amount</span>): <span class="var">string</span> {
+        <span class="kw">return</span> <span class="fn">sprintf</span>(<span class="str">"Paid $%.2f via Credit Card"</span>, <span class="var">$amount</span>);
+    }
+}
+
+<span class="kw">class</span> <span class="cls">PayPal</span> <span class="kw">implements</span> <span class="cls">PaymentStrategy</span> {
+    <span class="kw">public function</span> <span class="fn">pay</span>(<span class="var">float</span> <span class="var">$amount</span>): <span class="var">string</span> {
+        <span class="kw">return</span> <span class="fn">sprintf</span>(<span class="str">"Paid $%.2f via PayPal"</span>, <span class="var">$amount</span>);
+    }
+}
+
+<span class="kw">class</span> <span class="cls">Checkout</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="kw">private</span> <span class="cls">PaymentStrategy</span> <span class="var">$strategy</span>) {}
+
+    <span class="kw">public function</span> <span class="fn">setStrategy</span>(<span class="cls">PaymentStrategy</span> <span class="var">$s</span>): <span class="var">void</span> {
+        <span class="var">$this</span><span class="op">-></span><span class="var">strategy</span> <span class="op">=</span> <span class="var">$s</span>;
+    }
+
+    <span class="kw">public function</span> <span class="fn">process</span>(<span class="var">float</span> <span class="var">$amount</span>): <span class="var">string</span> {
+        <span class="kw">return</span> <span class="var">$this</span><span class="op">-></span><span class="var">strategy</span><span class="op">-></span><span class="fn">pay</span>(<span class="var">$amount</span>);
+    }
+}
+
+<span class="var">$cart</span> <span class="op">=</span> <span class="kw">new</span> <span class="cls">Checkout</span>(<span class="kw">new</span> <span class="cls">CreditCard</span>());
+<span class="fn">echo</span> <span class="var">$cart</span><span class="op">-></span><span class="fn">process</span>(<span class="num">99.99</span>); <span class="cm">// Paid $99.99 via Credit Card</span>
+
+<span class="var">$cart</span><span class="op">-></span><span class="fn">setStrategy</span>(<span class="kw">new</span> <span class="cls">PayPal</span>());
+<span class="fn">echo</span> <span class="var">$cart</span><span class="op">-></span><span class="fn">process</span>(<span class="num">49.00</span>); <span class="cm">// Paid $49.00 via PayPal</span>`
+        }
+      ],
+      callout: { type: "info", title: "THE GANG OF FOUR", text: "The classic book 'Design Patterns: Elements of Reusable Object-Oriented Software' defines 23 patterns. Key ones for PHP: Singleton, Factory, Builder, Observer, Decorator, Strategy, Repository, Dependency Injection." }
+    },
+    quiz: [
+      {
+        q: "Which design pattern ensures only one instance of a class exists?",
+        opts: ["Factory", "Observer", "Singleton", "Decorator"],
+        correct: 2,
+        explain: "The Singleton pattern restricts instantiation of a class to a single instance, providing a global access point."
+      },
+      {
+        q: "The Strategy pattern is best described as:",
+        opts: ["A way to build complex objects step by step", "Encapsulating interchangeable algorithms behind a common interface", "Notifying multiple objects of state changes", "Wrapping objects to add behavior"],
+        correct: 1,
+        explain: "Strategy defines a family of algorithms, encapsulates each one, and makes them interchangeable — like payment methods, sorting algorithms, or compression schemes."
+      },
+      {
+        q: "Why should you prevent cloning in a Singleton?",
+        opts: ["Cloning is not allowed in PHP", "Cloning would create a second instance, breaking the Singleton guarantee", "For performance reasons only", "To prevent memory leaks"],
+        correct: 1,
+        explain: "If cloning is allowed, $clone = clone $singleton would create a second instance — violating the one-instance-only guarantee."
+      }
+    ]
+  }
+];
+
+// ─── STATE ───────────────────────────────────────────
+let currentView = 'home';
+let currentChapter = null;
+let quizState = {
+  questionIndex: 0,
+  answered: false,
+  score: 0,
+  finished: false
+};
+let completedChapters = new Set(JSON.parse(localStorage.getItem('completed') || '[]'));
+
+// ─── UTILITIES ───────────────────────────────────────
+function saveProgress() {
+  localStorage.setItem('completed', JSON.stringify([...completedChapters]));
+}
+
+function getLevelBadge(level) {
+  const map = { beginner: 'badge-beginner', intermediate: 'badge-intermediate', advanced: 'badge-advanced' };
+  return `<span class="nav-badge ${map[level]}">${level.toUpperCase()}</span>`;
+}
+
+function getLevelPill(level) {
+  const colors = { beginner: 'rgba(0,255,136,0.15)', intermediate: 'rgba(0,212,255,0.15)', advanced: 'rgba(255,107,53,0.15)' };
+  const text = { beginner: 'var(--accent3)', intermediate: 'var(--accent)', advanced: 'var(--accent4)' };
+  return `<span class="meta-pill" style="background:${colors[level]};color:${text[level]}">${level.toUpperCase()}</span>`;
+}
+
+function copyCode(btn) {
+  const code = btn.closest('.code-wrap').querySelector('pre').innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = 'COPIED!';
+    setTimeout(() => btn.textContent = 'COPY', 2000);
+  });
+}
+
+// ─── NAV ─────────────────────────────────────────────
+function buildNav() {
+  const levels = ['beginner', 'intermediate', 'advanced'];
+  const labels = { beginner: '01 — BEGINNER', intermediate: '02 — INTERMEDIATE', advanced: '03 — ADVANCED' };
+
+  let html = '';
+  levels.forEach(level => {
+    const chs = chapters.filter(c => c.level === level);
+    html += `<div class="nav-section">
+      <div class="nav-section-label">${labels[level]}</div>`;
+    chs.forEach(ch => {
+      const done = completedChapters.has(ch.id);
+      html += `
+      <div class="nav-item ${currentChapter?.id === ch.id ? 'active' : ''}" onclick="openChapter(${ch.id})" id="nav-${ch.id}">
+        <span class="nav-num">${String(ch.id + 1).padStart(2,'0')}</span>
+        <div class="nav-info">
+          <div class="nav-title">${ch.title}</div>
+        </div>
+        ${getLevelBadge(ch.level)}
+        <div class="nav-check ${done ? 'done' : ''}">${done ? '✓' : ''}</div>
+      </div>`;
+    });
+    html += '</div>';
+  });
+
+  document.getElementById('navList').innerHTML = html;
+  updateProgressBar();
+}
+
+function updateProgressBar() {
+  const pct = Math.round((completedChapters.size / chapters.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${completedChapters.size} / ${chapters.length}`;
+}
+
+// ─── ROUTING ─────────────────────────────────────────
+function showHome() {
+  currentView = 'home';
+  currentChapter = null;
+  document.getElementById('crumb').innerHTML = `PHP::OOP &nbsp;/&nbsp; <span>Home</span>`;
+  document.getElementById('prevBtn').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'none';
+
+  const grid = chapters.map(ch => {
+    const done = completedChapters.has(ch.id);
+    return `
+    <div class="chapter-card ${done ? 'completed' : ''}" onclick="openChapter(${ch.id})">
+      <div class="card-num">${String(ch.id + 1).padStart(2,'0')} / ${chapters.length}</div>
+      <div class="card-title">${ch.icon} ${ch.title}</div>
+      <div class="card-desc">${ch.desc}</div>
+      <div class="card-footer">
+        ${getLevelBadge(ch.level)}
+        <span style="font-family:var(--font-mono);font-size:10px;color:${done ? 'var(--accent3)' : 'var(--text3)'}">${done ? '✓ DONE' : '→ START'}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('content').innerHTML = `
+  <div class="hero">
+    <div class="hero-tag">PHP MASTERY COURSE</div>
+    <h1>Master <span class="highlight">Object<br>Oriented</span> PHP</h1>
+    <p>From beginner concepts to advanced design patterns. Each chapter includes theory, real-world code examples, and a quiz to test your understanding.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">${chapters.length}</div><div class="stat-label">CHAPTERS</div></div>
+      <div class="stat"><div class="stat-num">${chapters.reduce((a,c)=>a+c.quiz.length,0)}</div><div class="stat-label">QUIZ QUESTIONS</div></div>
+      <div class="stat"><div class="stat-num">${completedChapters.size}</div><div class="stat-label">COMPLETED</div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="chapters-grid">${grid}</div>`;
+
+  buildNav();
+  closeSidebar();
+}
+
+function openChapter(id) {
+  currentChapter = chapters[id];
+  currentView = 'chapter';
+  quizState = { questionIndex: 0, answered: false, score: 0, finished: false };
+
+  document.getElementById('crumb').innerHTML = `PHP::OOP &nbsp;/&nbsp; <span>${currentChapter.title}</span>`;
+  document.getElementById('prevBtn').style.display = id > 0 ? 'block' : 'none';
+  document.getElementById('nextBtn').style.display = id < chapters.length - 1 ? 'block' : 'none';
+
+  renderChapter();
+  buildNav();
+  closeSidebar();
+  window.scrollTo(0, 0);
+}
+
+function navigate(dir) {
+  if (!currentChapter) return;
+  const newId = currentChapter.id + dir;
+  if (newId >= 0 && newId < chapters.length) openChapter(newId);
+}
+
+// ─── CHAPTER RENDER ──────────────────────────────────
+function renderChapter() {
+  const ch = currentChapter;
+  const c = ch.content;
+
+  let sectionsHtml = '';
+  c.sections.forEach(s => {
+    let bulletsHtml = '';
+    if (s.bullets) {
+      bulletsHtml = `<ul>${s.bullets.map(b => `<li>${b}</li>`).join('')}</ul>`;
+    }
+    let codeHtml = '';
+    if (s.code) {
+      codeHtml = `
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-lang">PHP</span>
+          <button class="code-copy" onclick="copyCode(this)">COPY</button>
+        </div>
+        <div class="code-body"><pre>${s.code}</pre></div>
+      </div>`;
+    }
+    sectionsHtml += `
+    <div class="content-section">
+      <h3>${s.heading}</h3>
+      <p>${s.body}</p>
+      ${bulletsHtml}
+      ${codeHtml}
+    </div>`;
+  });
+
+  let pillarsHtml = '';
+  if (c.pillars) {
+    pillarsHtml = `
+    <div class="tag-row">
+      ${c.pillars.map(p => `
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 16px;min-width:140px;flex:1">
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--${p.color});font-weight:700;margin-bottom:4px">${p.name}</div>
+        <div style="font-size:11px;color:var(--text3)">${p.desc}</div>
+      </div>`).join('')}
+    </div>`;
+  }
+
+  const callout = c.callout ? `
+  <div class="callout callout-${c.callout.type}">
+    <strong>${c.callout.title}</strong>
+    ${c.callout.text}
+  </div>` : '';
+
+  document.getElementById('content').innerHTML = `
+  <div class="chapter-view">
+    <div class="chapter-header">
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--text3);letter-spacing:2px;margin-bottom:8px">CHAPTER ${String(ch.id + 1).padStart(2,'0')}</div>
+      <h2>${ch.icon} ${ch.title}</h2>
+      <p style="font-size:14px;color:var(--text2);margin-top:8px;line-height:1.7">${c.intro}</p>
+      <div class="chapter-meta">
+        ${getLevelPill(ch.level)}
+        <span class="meta-pill" style="background:rgba(0,212,255,0.1);color:var(--accent)">${ch.quiz.length} QUIZ QUESTIONS</span>
+        ${completedChapters.has(ch.id) ? '<span class="meta-pill" style="background:rgba(0,255,136,0.1);color:var(--accent3)">✓ COMPLETED</span>' : ''}
+      </div>
+    </div>
+
+    ${pillarsHtml}
+    ${sectionsHtml}
+    ${callout}
+
+    <div id="quizSection"></div>
+
+    <div class="nav-btns">
+      ${ch.id > 0 ? `<button class="btn btn-ghost" onclick="navigate(-1)">← PREV CHAPTER</button>` : ''}
+      ${ch.id < chapters.length - 1 ? `<button class="btn btn-primary" onclick="navigate(1)">NEXT CHAPTER →</button>` : '<button class="btn btn-success" onclick="showHome()">↩ ALL CHAPTERS</button>'}
+    </div>
+  </div>`;
+
+  renderQuiz();
+}
+
+// ─── QUIZ ─────────────────────────────────────────────
+function renderQuiz() {
+  const qs = currentChapter.quiz;
+  const qz = quizState;
+
+  if (qz.finished) {
+    renderQuizResult();
+    return;
+  }
+
+  const q = qs[qz.questionIndex];
+  const letters = ['A', 'B', 'C', 'D'];
+
+  const optionsHtml = q.opts.map((opt, i) => `
+  <div class="option" id="opt-${i}" onclick="selectOption(${i})">
+    <span class="option-letter">${letters[i]}.</span>
+    <span class="option-text">${opt}</span>
+  </div>`).join('');
+
+  document.getElementById('quizSection').innerHTML = `
+  <div class="quiz-section">
+    <div class="quiz-header">
+      <div class="quiz-title">⬡ CHAPTER QUIZ</div>
+      <div class="quiz-progress-text">QUESTION ${qz.questionIndex + 1} / ${qs.length}</div>
+    </div>
+
+    <div class="question-block">
+      <div class="question-num">Q${qz.questionIndex + 1}</div>
+      <div class="question-text">${q.q}</div>
+      <div class="options">${optionsHtml}</div>
+
+      <div class="feedback" id="feedback"></div>
+
+      <div class="quiz-actions">
+        <button class="btn btn-primary" id="checkBtn" onclick="checkAnswer()" style="display:none">CHECK ANSWER</button>
+        <button class="btn btn-ghost" id="nextQBtn" onclick="nextQuestion()" style="display:none">
+          ${qz.questionIndex < qs.length - 1 ? 'NEXT QUESTION →' : 'SEE RESULTS →'}
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
+
+let selectedOpt = null;
+
+function selectOption(i) {
+  if (quizState.answered) return;
+  selectedOpt = i;
+  document.querySelectorAll('.option').forEach((el, j) => {
+    el.classList.toggle('selected', j === i);
+  });
+  document.getElementById('checkBtn').style.display = 'block';
+}
+
+function checkAnswer() {
+  if (selectedOpt === null || quizState.answered) return;
+  quizState.answered = true;
+
+  const q = currentChapter.quiz[quizState.questionIndex];
+  const correct = q.correct;
+  const fb = document.getElementById('feedback');
+
+  document.querySelectorAll('.option').forEach((el, i) => {
+    el.classList.add('locked');
+    if (i === correct) el.classList.add('correct');
+    else if (i === selectedOpt) el.classList.add('wrong');
+  });
+
+  if (selectedOpt === correct) {
+    quizState.score++;
+    fb.className = 'feedback correct-fb show';
+    fb.innerHTML = `<strong>✓ Correct!</strong> ${q.explain}`;
+  } else {
+    fb.className = 'feedback wrong-fb show';
+    fb.innerHTML = `<strong>✗ Incorrect.</strong> ${q.explain}`;
+  }
+
+  document.getElementById('checkBtn').style.display = 'none';
+  document.getElementById('nextQBtn').style.display = 'block';
+  selectedOpt = null;
+}
+
+function nextQuestion() {
+  quizState.questionIndex++;
+  quizState.answered = false;
+
+  if (quizState.questionIndex >= currentChapter.quiz.length) {
+    quizState.finished = true;
+    renderQuizResult();
+  } else {
+    renderQuiz();
+  }
+}
+
+function renderQuizResult() {
+  const total = currentChapter.quiz.length;
+  const score = quizState.score;
+  const pct = Math.round((score / total) * 100);
+
+  const msgs = {
+    100: "Perfect score! You've mastered this chapter.",
+    80: "Excellent work! You have a strong grasp of the material.",
+    60: "Good effort! Review the sections you missed.",
+    0: "Keep studying — go back and re-read the chapter."
+  };
+
+  let msg = msgs[0];
+  if (pct === 100) msg = msgs[100];
+  else if (pct >= 80) msg = msgs[80];
+  else if (pct >= 60) msg = msgs[60];
+
+  if (pct >= 60) {
+    completedChapters.add(currentChapter.id);
+    saveProgress();
+    buildNav();
+  }
+
+  document.getElementById('quizSection').innerHTML = `
+  <div class="quiz-section">
+    <div class="quiz-result">
+      <div class="result-score">${score}/${total}</div>
+      <div class="result-label">QUIZ COMPLETE — ${pct}% CORRECT</div>
+      <div class="result-message">${msg}</div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-ghost" onclick="retakeQuiz()">↺ RETAKE QUIZ</button>
+        ${currentChapter.id < chapters.length - 1
+          ? `<button class="btn btn-primary" onclick="navigate(1)">NEXT CHAPTER →</button>`
+          : `<button class="btn btn-success" onclick="showHome()">↩ HOME</button>`}
+      </div>
+    </div>
+  </div>`;
+}
+
+function retakeQuiz() {
+  quizState = { questionIndex: 0, answered: false, score: 0, finished: false };
+  renderQuiz();
+}
+
+// ─── MOBILE ──────────────────────────────────────────
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+document.getElementById('overlay').addEventListener('click', closeSidebar);
+
+// ─── INIT ─────────────────────────────────────────────
+showHome();
+</script>
+
+<!-- PWA manifest inline equivalent -->
+<script>
+// Register service worker for PWA
+if ('serviceWorker' in navigator) {
+  const sw = `
+const CACHE = 'php-oop-v1';
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/'])));
+});
+self.addEventListener('fetch', e => {
+  e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
+});`;
+  const blob = new Blob([sw], {type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
+}
+</script>
+</body>
+</html>
