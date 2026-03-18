@@ -222,6 +222,12 @@ const chapters = [
         {heading:"The Four Pillars",body:`OOP is built on four core concepts:`,
         bullets:["<strong>Encapsulation</strong> — Bundle data + behavior, hide internals","<strong>Inheritance</strong> — Child classes inherit parent features","<strong>Polymorphism</strong> — Same interface, different implementations","<strong>Abstraction</strong> — Hide complexity, expose only essentials"]}
       ],
+      pillars:[
+        {name:"Encapsulation", desc:"Bundle data + behavior, hide internals",        color:"var(--accent)"},
+        {name:"Inheritance",   desc:"Child classes inherit parent features",          color:"var(--accent3)"},
+        {name:"Polymorphism",  desc:"Same interface, different implementations",      color:"var(--accent4)"},
+        {name:"Abstraction",   desc:"Hide complexity, expose only essentials",        color:"var(--accent)"}
+      ],
       callout:{type:"info",title:"WHY LEARN OOP?",text:"Every major PHP framework — Laravel, Symfony, Yii — is built entirely on OOP. It is the foundation of professional PHP development."}
     },
     quiz:[
@@ -1159,6 +1165,17 @@ function renderChapter() {
   });
   const callout = c.callout ? `<div class="callout callout-${c.callout.type}"><strong>${c.callout.title}</strong>${c.callout.text}</div>` : '';
 
+  const pillarsHtml = c.pillars ? `
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:24px 0">
+    ${c.pillars.map(p=>`
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 16px;transition:border-color .2s,transform .2s;cursor:default"
+         onmouseover="this.style.borderColor='${p.color}';this.style.transform='translateY(-2px)'"
+         onmouseout="this.style.borderColor='var(--border)';this.style.transform='translateY(0)'">
+      <div style="font-family:var(--font-display);font-size:12px;font-weight:700;color:${p.color};margin-bottom:8px;letter-spacing:.5px">${p.name}</div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.55">${p.desc}</div>
+    </div>`).join('')}
+  </div>` : '';
+
   document.getElementById('content').innerHTML = `
   <div class="chapter-view">
     <div class="chapter-header">
@@ -1171,7 +1188,7 @@ function renderChapter() {
         ${completed.has(ch.id)?'<span class="meta-pill" style="background:rgba(0,255,136,0.1);color:var(--accent3)">✓ COMPLETED</span>':''}
       </div>
     </div>
-    ${shtml}${callout}
+    ${shtml}${pillarsHtml}${callout}
     <div id="quizSection"></div>
     <div class="nav-btns">
       ${ch.id>0?`<button class="btn btn-ghost" onclick="navigate(-1)">← PREV CHAPTER</button>`:''}
